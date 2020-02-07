@@ -24,9 +24,13 @@
     },
     "homepage": "https://github.com/stefanKuijers/air-q#readme",
     "dependencies": {
+        "isomorphic-unfetch": "^3.0.0",
         "next": "^9.2.1",
+        "next-offline": "^5.0.0",
         "react": "^16.12.0",
-        "react-dom": "^16.12.0"
+        "react-dom": "^16.12.0",
+        "react-markdown": "^4.3.1",
+        "swr": "^0.1.16"
     },
     "devDependencies": {
         "@types/node": "^13.7.0",

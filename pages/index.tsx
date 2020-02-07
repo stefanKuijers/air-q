@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 
-import Header from '../components/Header';
+import Layout from '../components/Layout';
 
 interface Props {
     userAgent: string | undefined;
@@ -8,12 +8,10 @@ interface Props {
 
 const Home: NextPage<Props> = ({ userAgent }: Props) => {
     return (
-        <div>
-            <Header />
-
+        <Layout>
             <h1>Home</h1>
             <p>{userAgent}</p>
-        </div>
+        </Layout>
     );
 };
 
