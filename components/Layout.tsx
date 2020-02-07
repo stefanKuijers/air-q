@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { ReactNode } from 'react';
 
 import Header from './Header';
@@ -13,11 +14,20 @@ const layoutStyle = {
 };
 
 const Layout: React.FunctionComponent<Props> = (props: Props) => (
-    <div style={layoutStyle}>
-        <Header />
+    <>
+        <Head>
+            <title>air-q</title>
+            <link rel="manifest" href="/manifest.json" />
+            <meta name="theme-color" content="#72B340" />
+            <meta name="description" content="air q demo app" />
+        </Head>
 
-        {props.children}
-    </div>
+        <main style={layoutStyle}>
+            <Header />
+
+            {props.children}
+        </main>
+    </>
 );
 
 export default Layout;
