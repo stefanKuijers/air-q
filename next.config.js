@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const withOffline = require('next-offline');
 
+require('dotenv').config();
+
 const nextConfig = {
     transformManifest: manifest => ['/'].concat(manifest), // add the homepage to the cache
     // Trying to set NODE_ENV=production when running yarn dev causes a build-time error so we
@@ -27,9 +29,8 @@ const nextConfig = {
         ],
     },
     env: {
-        MONGODB_URI:
-            'mongodb+srv://airq-root:dz5zoOZ7WwP8Vvzk@cluster-airq-88z91.mongodb.net/air-quality?retryWrites=true&w=majority',
-        MONGODB_NAME: 'air-quality',
+        MONGODB_URI: process.env.MONGODB_URI,
+        MONGODB_NAME: process.env.MONGODB_NAME,
     },
 };
 
