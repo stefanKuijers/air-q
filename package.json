@@ -24,7 +24,9 @@
     },
     "homepage": "https://github.com/stefanKuijers/air-q#readme",
     "dependencies": {
+        "@types/mongodb": "^3.3.15",
         "isomorphic-unfetch": "^3.0.0",
+        "mongodb": "^3.5.2",
         "next": "^9.2.1",
         "next-offline": "^5.0.0",
         "react": "^16.12.0",

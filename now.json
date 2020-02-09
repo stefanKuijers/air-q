@@ -15,5 +15,9 @@
             "src": "next.config.js",
             "use": "@now/next"
         }
-    ]
+    ],
+    "env": {
+        "MONGODB_URI": "@mongodb-uri",
+        "MONGODB_NAME": "@mongodb-name"
+    }
 }

@@ -2,7 +2,6 @@
 const withOffline = require('next-offline');
 
 const nextConfig = {
-    target: 'serverless',
     transformManifest: manifest => ['/'].concat(manifest), // add the homepage to the cache
     // Trying to set NODE_ENV=production when running yarn dev causes a build-time error so we
     // turn on the SW in dev mode so that we can actually test it
@@ -26,6 +25,11 @@ const nextConfig = {
                 },
             },
         ],
+    },
+    env: {
+        MONGODB_URI:
+            'mongodb+srv://airq-root:dz5zoOZ7WwP8Vvzk@cluster-airq-88z91.mongodb.net/air-quality?retryWrites=true&w=majority',
+        MONGODB_NAME: 'air-quality',
     },
 };
 
