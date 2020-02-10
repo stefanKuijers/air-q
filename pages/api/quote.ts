@@ -7,10 +7,12 @@ interface Quote {
     author: string;
 }
 
-export default (req: NextApiRequest, res: NextApiResponse<Quote>): void => {
-    const query = req.query;
-    let quotes = rawQuotes;
-
+export const getQuote = (
+    quotes: Quote[],
+    query: {
+        [key: string]: string | string[];
+    } = {},
+): Quote => {
     if (query.author) {
         const author = query.author as string;
         quotes = quotes.filter(quote => quote.author.toLowerCase().includes(author.toLowerCase()));
@@ -21,5 +23,9 @@ export default (req: NextApiRequest, res: NextApiResponse<Quote>): void => {
 
     const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
-    res.status(200).json(quote);
+    return quote;
+};
+
+export default (req: NextApiRequest, res: NextApiResponse<Quote>): void => {
+    res.status(200).json(getQuote(rawQuotes, req.query));
 };
