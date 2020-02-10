@@ -7,13 +7,7 @@ interface Location {
 }
 
 interface Response {
-    data?: string;
-    locations?: Location[];
-    error?: string;
-    env?: {
-        uri: string | undefined;
-        name: string | undefined;
-    };
+    locations: Location[];
 }
 
 export default async (_req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> => {
