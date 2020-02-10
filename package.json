@@ -8,7 +8,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint . --ext .ts,.tsx  --ignore-pattern node_modules/",
-        "test": "echo \"I guess jest for unit and puppeteer for e2e\" && exit 1",
+        "test": "jest",
         "test:unit": "echo \"jest unit\" && exit 1",
         "test:e2e": "echo \"puppeteer e2e\" && exit 1"
     },
@@ -24,7 +24,6 @@
     },
     "homepage": "https://github.com/stefanKuijers/air-q#readme",
     "dependencies": {
-        "@types/mongodb": "^3.3.15",
         "dotenv": "^8.2.0",
         "isomorphic-unfetch": "^3.0.0",
         "mongodb": "^3.5.2",
@@ -36,15 +35,21 @@
         "swr": "^0.1.16"
     },
     "devDependencies": {
+        "@testing-library/react": "^9.4.0",
+        "@types/jest": "^25.1.2",
+        "@types/mongodb": "^3.3.15",
         "@types/node": "^13.7.0",
         "@types/react": "^16.9.19",
         "@typescript-eslint/eslint-plugin": "^2.19.0",
         "@typescript-eslint/parser": "^2.19.0",
+        "babel-jest": "^25.1.0",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.10.0",
         "eslint-plugin-prettier": "^3.1.2",
         "eslint-plugin-react": "^7.18.3",
+        "jest": "^25.1.0",
         "prettier": "^1.19.1",
+        "ts-jest": "^25.2.0",
         "typescript": "^3.7.5"
     }
 }
