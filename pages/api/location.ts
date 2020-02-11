@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { Db } from 'mongodb';
+
 import driver from '../../data/mongodb/driver';
 
 interface Location {
@@ -7,16 +9,18 @@ interface Location {
 }
 
 interface Response {
-    locations: Location[];
+    locations?: Location[] | string;
 }
 
 export default async (_req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> => {
-    const db = await driver.getDb();
+    await driver.execute(async (db: Db): Promise<void> => {
+        const locations = await db
+            .collection('locations')
+            .find({})
+            .toArray();
 
-    const collection = await db.collection('locations');
-    const locations = await collection.find({}).toArray();
-
-    res.status(200).json({
-        locations: locations,
-    });
+        res.status(200).json({
+            locations: locations,
+        });
+    }, res);
 };

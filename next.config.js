@@ -28,10 +28,6 @@ const nextConfig = {
             },
         ],
     },
-    env: {
-        MONGODB_URI: process.env.MONGODB_URI,
-        MONGODB_NAME: process.env.MONGODB_NAME,
-    },
 };
 
 module.exports = withOffline(nextConfig);
