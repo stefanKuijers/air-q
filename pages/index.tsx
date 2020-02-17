@@ -1,60 +1,64 @@
 import { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid } from '@material-ui/core';
+import { useState } from 'react';
+import useSWR from 'swr';
+import { Box, Typography, Button } from '@material-ui/core';
 
-import OpenAQ from '../data/openaq/api';
 import MeasurementCard from '../components/measurement-card/MeasurementCard';
 import Layout from '../components/Layout';
 
 const Page: NextPage = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [airQuality, setAirQuality] = useState([] as any[]);
+    const { data, error } = useSWR('/api/location', (url: string) => fetch(url).then(r => r.json()));
+    const [adding, setAdding] = useState(false);
 
-    useEffect((): void => {
-        OpenAQ.get('measurements', {
-            coordinates: '47.49,19.04',
-            // radius: 1000,
-            // it seems there is no pm25 close to budapest
-            parameter: ['pm25', 'pm10', 'so2'],
-            limit: 5,
-        }).then(data => {
-            setAirQuality(data);
-        });
-    }, []);
+    const toggleAdding = (): void => {
+        setAdding(!adding);
+    };
 
     return (
         <Layout>
-            {airQuality.length ? (
-                <>
-                    <Box component="header" mt={5} mb={5}>
-                        <Typography variant="h2">{airQuality.length}</Typography>
-                    </Box>
-                    <Grid container spacing={4}>
-                        <Grid item xs={6}>
-                            <MeasurementCard label="PM2.5" value={12.4} />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <MeasurementCard label="PM10" value={9.7} />
-                        </Grid>
-                    </Grid>
-                </>
-            ) : (
-                <span>loading</span>
-            )}
+            <Box component="header">
+                <Typography variant="h3">Locations</Typography>
+            </Box>
+
+            <Box>
+                {error && <Box>error while loading data</Box>}
+
+                {/* // onSave={toggleAdding}  */}
+                {adding && <MeasurementCard />}
+
+                {data &&
+                    (data.locations.length
+                        ? data.locations.map((key: number, item: { name: string }) => (
+                              <MeasurementCard key={key} location={item.name} />
+                          ))
+                        : !adding && (
+                              <>
+                                  <Typography>
+                                      To show air quality measurements please add a location
+                                      {/* manually or allow us to
+                                      access your geo-location. */}
+                                  </Typography>
+                                  {/* <Button variant="contained" color="primary">
+                                      Current Location
+                                  </Button> */}
+                                  <Button onClick={toggleAdding} variant="contained">
+                                      Add
+                                  </Button>
+                              </>
+                          ))}
+
+                {!data && <Box>loading...</Box>}
+            </Box>
+
+            <Box component="footer">
+                {data && data.locations.length > 0 && !adding && (
+                    <Button onClick={toggleAdding} variant="contained">
+                        Add
+                    </Button>
+                )}
+            </Box>
         </Layout>
     );
 };
-
-// Page.getInitialProps = async function(): Promise<any> {
-//     const data = await OpenAQ.get('measurements', {
-//         coordinates: '40.23,34.17',
-//     });
-
-//     console.log(`Show data fetched. Count: ${data.length}`, data);
-
-//     return {
-//         data,
-//     };
-// };
 
 export default Page;

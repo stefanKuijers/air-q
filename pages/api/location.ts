@@ -10,9 +10,10 @@ interface Location {
 
 interface Response {
     locations?: Location[] | string;
+    message?: string;
 }
 
-export default async (_req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> => {
+async function get(res: NextApiResponse<Response>): Promise<void> {
     await execute(async (db: Db): Promise<void> => {
         const locations = await db
             .collection('locations')
@@ -23,4 +24,32 @@ export default async (_req: NextApiRequest, res: NextApiResponse<Response>): Pro
             locations: locations,
         });
     }, res);
+}
+
+async function post(req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> {
+    console.log(req.body);
+    await execute(
+        async (): Promise<void> => {
+            const action = req.body.id ? 'update' : 'insert';
+            // await db.collection('locations').insert({});
+
+            res.status(200).json({
+                message: action,
+            });
+        },
+    );
+}
+
+export default async (req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> => {
+    switch (req.method) {
+        case 'GET':
+            await get(res);
+            break;
+        case 'POST':
+            post(req, res);
+            break;
+        default:
+            res.status(405).end(); //Method Not Allowed
+            break;
+    }
 };
