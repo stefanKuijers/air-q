@@ -1,8 +1,7 @@
 import fetch from 'isomorphic-unfetch';
 import qs from 'qs';
 
-type Resource = 'measurements' | 'cities' | 'countries';
-type Options = { [key: string]: string | number | string[] };
+import { Resource, Options } from './interfaces';
 
 async function get(resource: Resource, options?: Options): Promise<any[]> {
     const optionsString = options ? `?${qs.stringify(options, { encode: false })}` : '';

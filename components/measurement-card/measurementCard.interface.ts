@@ -1,6 +1,10 @@
-export interface ValueProps {
-    label: string;
-    value: number;
+import { Measurement } from '../../data/openaq/interfaces';
+
+export interface ParsedMeasurements {
+    [key: string]: {
+        active: boolean;
+        values: Measurement[];
+    };
 }
 
 export interface PublicProps {

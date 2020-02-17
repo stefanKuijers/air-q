@@ -1,96 +1,120 @@
 import React, { useState, useEffect } from 'react';
-import Typography from '@material-ui/core/Typography';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid, ButtonGroup, Button } from '@material-ui/core';
 
 import OpenAQ from '../../data/openaq/api';
 import { Measurement } from '../../data/openaq/interfaces';
+
+import Props, { ParsedMeasurements } from './measurementCard.interface';
 import Location from './partials/location/Location';
+import Value from './partials/value/Value';
 
-import Props, { ValueProps } from './measurementCard.interface';
+export const parseMeasurements = (data: Measurement[]): ParsedMeasurements => {
+    return data.reduce((params: ParsedMeasurements, measurement: Measurement): ParsedMeasurements => {
+        if (!params[measurement.parameter]) {
+            params[measurement.parameter] = {
+                active: true,
+                values: [],
+            };
+        }
 
-const Value = ({ label, value }: ValueProps): JSX.Element => (
-    <Box component="section" mt={5} mb={5}>
-        <Typography variant="h6" component="h5">
-            {label}
-        </Typography>
-        <Typography variant="h1" component="h5">
-            {value}
-        </Typography>
-    </Box>
-);
+        params[measurement.parameter].values = [...params[measurement.parameter].values, measurement];
+
+        return params;
+    }, {} as ParsedMeasurements);
+};
 
 const MeasurementCard: React.FC<Props> = ({ location }: Props) => {
     const [editing, setEditing] = useState(!location);
-    const [parameters, setParameters] = useState<{ [key: string]: string }>({});
-    const [measurements, setMeasurements] = useState<Measurement[]>([]);
+    const [measurementsState, setMeasurementState] = useState<'prestine' | 'loading' | 'completed'>('prestine');
+    const [measurements, setMeasurements] = useState<ParsedMeasurements>({});
 
     const getMeasurements = (city?: string): void => {
         console.log('@getMeasurements', city);
         if (!city) {
+            setMeasurements({});
+            setMeasurementState('prestine');
             return;
         }
+        setMeasurementState('loading');
 
         OpenAQ.get('measurements', {
             location: city,
-            radius: 10000,
+            radius: 5000,
             // it seems there is no pm25 close to budapest
             // parameter: ['pm25', 'pm10', 'so2'],
             // limit: 10,
         }).then(data => {
-            setParameters(
-                data.reduce((params, measurement: Measurement) => {
-                    if (!params[measurement.parameter]) {
-                        params[measurement.parameter] = false;
-                    }
-                }, {}),
-            );
-            setMeasurements(data);
+            setMeasurements(parseMeasurements(data));
+            setMeasurementState('completed');
         });
     };
 
     useEffect(() => {
         if (location) {
-            console.log('get fresh data for known location');
+            getMeasurements(location);
         }
     }, []);
 
-    // const toggleParam = (event) => {
-    //     setParameters({
-    //         ...parameters,
-    //         []
-    //     });
-    // }
+    const toggleParam = (param: string): void => {
+        setMeasurements({
+            ...measurements,
+            [param]: {
+                active: !measurements[param].active,
+                values: measurements[param].values,
+            },
+        });
+    };
 
     const handleLocationChange = ({ city }: { city?: string }): void => {
         getMeasurements(city); // get data for newly set location
     };
 
-    const availableParamenters = Object.keys(parameters);
-    const activeParamenters = availableParamenters.filter(item => parameters[item]);
+    const availableParamenters = Object.keys(measurements);
+    const activeParamenters = availableParamenters.filter(item => measurements[item].active);
 
     return (
         <>
-            <Box component="header" mt={5} mb={5}>
-                <Location value={location} editing={editing} onSet={handleLocationChange} />
+            <Box component="header" mt={6} mb={1}>
+                <Box mb={3}>
+                    <Location value={location} editing={editing} onSet={handleLocationChange} />
+                </Box>
 
-                {availableParamenters.length > 0 &&
-                    availableParamenters.map((item, key) => <span /*onClick={}*/ key={key}>{item}</span>)}
+                {availableParamenters.length > 0 && (
+                    <ButtonGroup color="primary" aria-label="outlined primary button group">
+                        {availableParamenters.map((item, key) => (
+                            <Button
+                                color={measurements[item].active ? 'primary' : 'default'}
+                                variant="contained"
+                                onClick={(): void => {
+                                    toggleParam(item);
+                                }}
+                                key={key}
+                            >
+                                {item}
+                            </Button>
+                        ))}
+                    </ButtonGroup>
+                )}
             </Box>
 
             <Grid container>
-                {measurements.length ? (
-                    measurements
-                        .filter(item => activeParamenters.indexOf(item.parameter) !== -1)
-                        .map((item, key) => (
-                            <Grid key={key} item xs={3} spacing={4}>
-                                <Value label={item.parameter} value={item.value} />
-                            </Grid>
-                        ))
-                ) : (
-                    <Grid item xs={12}>
-                        will fetch...
-                    </Grid>
-                )}
+                {activeParamenters.length > 0 &&
+                    activeParamenters.map((item, key) => (
+                        <Grid key={key} item xs={4}>
+                            <Value
+                                label={`${measurements[item].values[0].parameter} - measurements: ${measurements[item].values.length}`}
+                                value={measurements[item].values[0].value}
+                            />
+                        </Grid>
+                    ))}
+
+                <Grid item xs={12}>
+                    {measurementsState === 'prestine' && 'data will fetch once you selected a country and city'}
+                    {measurementsState === 'loading' && 'fetching result data'}
+                    {measurementsState === 'completed' &&
+                        availableParamenters.length === 0 &&
+                        'there are no results for this location'}
+                </Grid>
             </Grid>
         </>
     );

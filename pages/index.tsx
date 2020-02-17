@@ -16,7 +16,7 @@ const Page: NextPage = () => {
 
     return (
         <Layout>
-            <Box component="header">
+            <Box component="header" mt={6} mb={3}>
                 <Typography variant="h3">Locations</Typography>
             </Box>
 

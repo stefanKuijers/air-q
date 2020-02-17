@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { TextField } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 // TODO: set import alias to data & components
@@ -60,21 +60,26 @@ const Location: React.FC<Props> = ({ value, editing, onSet }: Props) => {
         <>
             {editing ? (
                 <form noValidate autoComplete="off">
-                    <Autocomplete
-                        options={countries}
-                        getOptionLabel={option => option.name}
-                        // defaultValue={[location!]}
-                        onChange={handleCountryChange}
-                        renderInput={params => <TextField {...params} label="Country" fullWidth />}
-                    />
-                    {country && cities.length > 0 && (
-                        <Autocomplete
-                            options={cities}
-                            getOptionLabel={option => option.name}
-                            onChange={handleCityChange}
-                            renderInput={params => <TextField {...params} label="City" fullWidth />}
-                        />
-                    )}
+                    <Grid container spacing={4}>
+                        <Grid item xs={12} sm={6}>
+                            <Autocomplete
+                                options={countries}
+                                getOptionLabel={option => option.name}
+                                // defaultValue={[location!]}
+                                onChange={handleCountryChange}
+                                renderInput={params => <TextField {...params} label="Country" fullWidth />}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Autocomplete
+                                options={cities}
+                                disabled={!(country && cities.length > 0)}
+                                getOptionLabel={option => option.name}
+                                onChange={handleCityChange}
+                                renderInput={params => <TextField {...params} label="City" fullWidth />}
+                            />
+                        </Grid>
+                    </Grid>
                 </form>
             ) : (
                 <Typography variant="h2">{value}</Typography>
