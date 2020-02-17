@@ -29,9 +29,9 @@ async function get(res: NextApiResponse<Response>): Promise<void> {
 async function post(req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> {
     console.log(req.body);
     await execute(
-        async (): Promise<void> => {
+        async (db: Db): Promise<void> => {
             const action = req.body.id ? 'update' : 'insert';
-            // await db.collection('locations').insert({});
+            await db.collection('locations').insert(req.body);
 
             res.status(200).json({
                 message: action,

@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { Box, Typography, Button } from '@material-ui/core';
 
 import MeasurementCard from '../components/measurement-card/MeasurementCard';
+import { ServerLocation } from '../components/measurement-card/measurementCard.interface';
 import Layout from '../components/Layout';
 
 const Page: NextPage = () => {
@@ -16,46 +17,48 @@ const Page: NextPage = () => {
 
     return (
         <Layout>
-            <Box component="header" mt={6} mb={3}>
-                <Typography variant="h3">Locations</Typography>
-            </Box>
+            <Box pt={6} pb={6}>
+                <Box component="header" mb={3} mt={3}>
+                    <Typography variant="h3">Locations</Typography>
+                </Box>
 
-            <Box>
-                {error && <Box>error while loading data</Box>}
+                <Box mb={3}>
+                    {error && <Box>error while loading data</Box>}
 
-                {/* // onSave={toggleAdding}  */}
-                {adding && <MeasurementCard />}
+                    {/* // onSave={toggleAdding}  */}
+                    {adding && <MeasurementCard adding={adding} onSave={toggleAdding} />}
 
-                {data &&
-                    (data.locations.length
-                        ? data.locations.map((key: number, item: { name: string }) => (
-                              <MeasurementCard key={key} location={item.name} />
-                          ))
-                        : !adding && (
-                              <>
-                                  <Typography>
-                                      To show air quality measurements please add a location
-                                      {/* manually or allow us to
+                    {data &&
+                        (data.locations.length
+                            ? data.locations.map((item: ServerLocation, key: number) => (
+                                  <MeasurementCard key={key} location={item} />
+                              ))
+                            : !adding && (
+                                  <>
+                                      <Typography>
+                                          To show air quality measurements please add a location
+                                          {/* manually or allow us to
                                       access your geo-location. */}
-                                  </Typography>
-                                  {/* <Button variant="contained" color="primary">
+                                      </Typography>
+                                      {/* <Button variant="contained" color="primary">
                                       Current Location
                                   </Button> */}
-                                  <Button onClick={toggleAdding} variant="contained">
-                                      Add
-                                  </Button>
-                              </>
-                          ))}
+                                      <Button onClick={toggleAdding} variant="contained">
+                                          Add
+                                      </Button>
+                                  </>
+                              ))}
 
-                {!data && <Box>loading...</Box>}
-            </Box>
+                    {!data && <Box>loading...</Box>}
+                </Box>
 
-            <Box component="footer">
-                {data && data.locations.length > 0 && !adding && (
-                    <Button onClick={toggleAdding} variant="contained">
-                        Add
-                    </Button>
-                )}
+                <Box component="footer" mt={3} mb={3}>
+                    {data && data.locations.length > 0 && !adding && (
+                        <Button onClick={toggleAdding} variant="contained">
+                            New Location
+                        </Button>
+                    )}
+                </Box>
             </Box>
         </Layout>
     );

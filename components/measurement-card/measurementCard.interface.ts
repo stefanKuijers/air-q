@@ -1,4 +1,9 @@
 import { Measurement } from '../../data/openaq/interfaces';
+import { Location as LocationProps } from './partials/location/location.interface';
+
+export interface ServerLocation extends LocationProps {
+    parameters: string[];
+}
 
 export interface ParsedMeasurements {
     [key: string]: {
@@ -8,7 +13,9 @@ export interface ParsedMeasurements {
 }
 
 export interface PublicProps {
-    location?: string;
+    location?: LocationProps;
+    adding?: boolean;
+    onSave?: () => void;
 }
 
 export default PublicProps;

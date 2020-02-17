@@ -15,6 +15,7 @@ const Location: React.FC<Props> = ({ value, editing, onSet }: Props) => {
     const [countries, setCountries] = useState<Country[]>([]);
     const [country, setCountry] = useState<Country | null>(null);
     const [cities, setCities] = useState<City[]>([]);
+    const [city, setCity] = useState<City | null>(null);
 
     // const getMeasurements
 
@@ -45,21 +46,27 @@ const Location: React.FC<Props> = ({ value, editing, onSet }: Props) => {
             getCities(newCountry);
         }
 
+        setCity(null);
         setCountry(newCountry);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleCityChange = (_event: any, city: City | null): void => {
+        setCity(city);
         onSet({
             city: city ? city.name : undefined,
             country: country ? country.name : undefined,
         });
     };
 
+    const preventSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+        e.preventDefault();
+    };
+
     return (
         <>
             {editing ? (
-                <form noValidate autoComplete="off">
+                <form noValidate autoComplete="off" onSubmit={preventSubmit}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} sm={6}>
                             <Autocomplete
@@ -73,6 +80,7 @@ const Location: React.FC<Props> = ({ value, editing, onSet }: Props) => {
                         <Grid item xs={12} sm={6}>
                             <Autocomplete
                                 options={cities}
+                                value={city}
                                 disabled={!(country && cities.length > 0)}
                                 getOptionLabel={option => option.name}
                                 onChange={handleCityChange}
@@ -82,7 +90,7 @@ const Location: React.FC<Props> = ({ value, editing, onSet }: Props) => {
                     </Grid>
                 </form>
             ) : (
-                <Typography variant="h2">{value}</Typography>
+                <Typography variant="h3">{value}</Typography>
             )}
         </>
     );

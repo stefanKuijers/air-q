@@ -1,6 +1,7 @@
-interface Location {
+export interface Location {
     city?: string;
     country?: string;
+    parameters?: string[];
 }
 
 export default interface Props {
