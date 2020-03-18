@@ -2,37 +2,26 @@
 
 exports[`<Header /> matches snapshot 1`] = `
 <div>
-  <div>
-    <a
-      href="/"
-      style="margin-right: 15px;"
+  <div
+    class="makeStyles-root-1"
+  >
+    <header
+      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary MuiPaper-elevation4"
     >
-      Home
-    </a>
-    <a
-      href="/about"
-      style="margin-right: 15px;"
-    >
-      About
-    </a>
-    <a
-      href="/blog"
-      style="margin-right: 15px;"
-    >
-      Blog
-    </a>
-    <a
-      href="/shows"
-      style="margin-right: 15px;"
-    >
-      Shows
-    </a>
-    <a
-      href="/inspiration"
-      style="margin-right: 15px;"
-    >
-      Inspiration
-    </a>
+      <div
+        class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
+      >
+        <div
+          class="MuiContainer-root MuiContainer-maxWidthLg"
+        >
+          <h6
+            class="MuiTypography-root makeStyles-title-2 MuiTypography-h6"
+          >
+            Air Q
+          </h6>
+        </div>
+      </div>
+    </header>
   </div>
 </div>
 `;
